@@ -21,6 +21,12 @@ const Articles = ({ category, searchTerm }) => {
 
       try {
         const apiKey = import.meta.env.VITE_NYT_API_KEY;
+        console.log("API Key:", apiKey); // Memverifikasi API Key
+
+        if (!apiKey) {
+          throw new Error("API key is missing");
+        }
+
         let url;
 
         if (category === "mostPopular") {
@@ -33,6 +39,7 @@ const Articles = ({ category, searchTerm }) => {
         }
 
         const response = await axios.get(url);
+        console.log("API Response:", response); // Memverifikasi response API
 
         if (category === "mostPopular" && response.data.results) {
           setData(response.data.results);
