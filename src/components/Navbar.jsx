@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 
 const Navbar = () => {
   const [searchTerm, setSearchTerm] = useState("");
-  const navigate = useNavigate();
+  const navigate = useNavigate(); //fungsi handle search
 
   const handleSearch = () => {
     if (searchTerm.trim()) {

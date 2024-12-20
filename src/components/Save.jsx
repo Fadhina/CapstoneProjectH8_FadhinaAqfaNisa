@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 
 const { Text } = Typography;
 
+// ambil daftar artikel yang disimpan dari redux store
 const Save = () => {
   const savedArticles = useSelector((state) => state.articles.savedArticles);
 
@@ -31,6 +32,7 @@ const Save = () => {
     },
   ];
 
+  //komponen yang ditampilkan
   return (
     <div style={{ padding: "20px" }}>
       <h2>Saved Articles</h2>

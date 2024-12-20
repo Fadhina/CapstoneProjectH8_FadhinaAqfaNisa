@@ -3,9 +3,8 @@ import axios from "axios";
 import { Card, Skeleton, Alert, Typography, Row, Col, Button } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { saveArticle, unsaveArticle } from "../redux/articlesSlice";
-import { Link as RouterLink } from "react-router-dom"; // Menambahkan RouterLink untuk routing internal
 
-const { Title, Paragraph, Link } = Typography;
+const { Title, Paragraph } = Typography;
 
 const Articles = ({ category, searchTerm }) => {
   const [data, setData] = useState([]);
@@ -21,14 +20,12 @@ const Articles = ({ category, searchTerm }) => {
 
       try {
         const apiKey = import.meta.env.VITE_NYT_API_KEY;
-        console.log("API Key:", apiKey); // Memverifikasi API Key
 
         if (!apiKey) {
           throw new Error("API key is missing");
         }
-
+        // menentukan url api berdasarkan kategori
         let url;
-
         if (category === "mostPopular") {
           url = `https://api.nytimes.com/svc/mostpopular/v2/viewed/1.json?api-key=${apiKey}`;
         } else {
@@ -39,7 +36,6 @@ const Articles = ({ category, searchTerm }) => {
         }
 
         const response = await axios.get(url);
-        console.log("API Response:", response); // Memverifikasi response API
 
         if (category === "mostPopular" && response.data.results) {
           setData(response.data.results);
@@ -49,7 +45,6 @@ const Articles = ({ category, searchTerm }) => {
           setData([]);
         }
       } catch (err) {
-        console.error("Error fetching articles:", err);
         const message =
           err.response?.status === 429
             ? "Too many requests. Please try again later."
@@ -108,6 +103,8 @@ const Articles = ({ category, searchTerm }) => {
               : null;
           const isSaved = savedArticles.some((saved) => saved.title === title);
 
+          const articleUrl = article.web_url || article.url;
+
           return (
             <Col xs={24} sm={12} md={8} lg={6} key={index}>
               <Card
@@ -149,31 +146,52 @@ const Articles = ({ category, searchTerm }) => {
                   </div>
                 )}
                 <Paragraph ellipsis={{ rows: 3 }}>{description}</Paragraph>
-                <RouterLink
-                  to={`/article/${encodeURIComponent(title)}`} // Link menuju halaman artikel detail
-                  style={{ marginRight: "20px" }}
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    marginTop: "10px",
+                  }}
                 >
-                  Read More
-                </RouterLink>
-                <Button
-                  type={isSaved ? "dashed" : "primary"}
-                  onClick={() =>
-                    dispatch(
-                      isSaved
-                        ? unsaveArticle(title)
-                        : saveArticle({
-                            title,
-                            description,
-                            source: article.source || "Unknown",
-                          })
-                    )
-                  }
-                  style={{ marginTop: "10px" }}
-                >
-                  {isSaved ? "Unsave" : "Save"}
-                </Button>
+                  <a
+                    href={articleUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{
+                      flex: "1",
+                      textAlign: "left",
+                      color: "#1890ff",
+                      marginRight: "10px",
+                    }}
+                  >
+                    Read More
+                  </a>
+                  <Button
+                    type={isSaved ? "dashed" : "primary"}
+                    onClick={() =>
+                      dispatch(
+                        isSaved
+                          ? unsaveArticle(title)
+                          : saveArticle({
+                              title,
+                              description,
+                              source: article.source || "Unknown",
+                              url: articleUrl,
+                            })
+                      )
+                    }
+                  >
+                    {isSaved ? "Unsave" : "Save"}
+                  </Button>
+                </div>
                 <Paragraph
-                  style={{ marginTop: "10px", fontSize: "12px", color: "#888" }}
+                  style={{
+                    marginTop: "10px",
+                    fontSize: "12px",
+                    color: "#888",
+                    textAlign: "center",
+                  }}
                 >
                   Source: {article.source || "Unknown"}
                 </Paragraph>

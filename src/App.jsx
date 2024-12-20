@@ -19,7 +19,6 @@ const App = () => {
         <Route path="/" element={<Articles category="mostPopular" />} />
         <Route path="/search" element={<SearchResults />} />
         <Route path="/article/:title" element={<ArticleDetail />} />{" "}
-        {/* Rute untuk artikel detail */}
       </Routes>
     </Router>
   );

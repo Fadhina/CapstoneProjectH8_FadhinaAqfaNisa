@@ -6,6 +6,7 @@ const SearchResults = () => {
   const location = useLocation();
   const [searchTerm, setSearchTerm] = useState("");
 
+  //mengambil query dari parameter dari url
   useEffect(() => {
     const query = new URLSearchParams(location.search).get("q");
     if (query) setSearchTerm(query);

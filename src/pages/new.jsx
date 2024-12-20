@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 
 const Navbar = () => {
   const [searchTerm, setSearchTerm] = useState(""); // State untuk kata kunci pencarian
-  const navigate = useNavigate(); // Hook untuk navigasi antar halaman
+  const navigate = useNavigate(); // navigasi antar halaman
 
   const handleSearch = () => {
     if (searchTerm.trim()) {
